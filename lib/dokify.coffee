@@ -7,10 +7,13 @@ class Dokify
 
   models: {}
   apis: {}
-  config: {}
+  config: 
+    input: ''
+    output: ''
+    extendedModels: false
 
   constructor: (config)->
-    @config = config
+    extend @config, config
 
     @loadModels()
     @loadApis()
@@ -32,6 +35,10 @@ class Dokify
 
   loadModels: ()->
     o = extend o || {}, obj for k, obj of @getContentDir 'models'
+    return @ unless @config.extendedModels
+
+    #extend models
+    #for 
 
   loadApis: ()->
     raw = @getContentDir 'apis'

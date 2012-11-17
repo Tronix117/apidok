@@ -1,8 +1,12 @@
-Pet: 
+Pet$small:
   id:
     type: "Long"
   tag:
     type: "Tag"
+
+Pet$default: 
+  $extend: 'Pet$base'
+
   status:
     type:        "String"
     description: "pet status in the store"
