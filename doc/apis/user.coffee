@@ -58,7 +58,7 @@
     parameters: [
       name: "username"
       description: "The name that needs to be fetched. Use user1 for testing."
-      paramType: path
+      paramType: "path"
       required: true
       allowMultiple: false
       dataType: "string"

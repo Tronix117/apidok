@@ -7,6 +7,7 @@ class Dokify
 
   models: {}
   apis: {}
+  resources: {}
   config: 
     input: ''
     output: ''
@@ -14,11 +15,7 @@ class Dokify
 
   constructor: (config)->
     extend @config, config
-
-    @loadModels()
-    @loadApis()
-
-    @generateResource()
+    @loadResources().loadModels().loadApis().writeResources().writeApis()
 
   getContentDir: (baseprefix = '', aliasSeparator = '/', recursive = true, prefix = '')->
     raw = {}
@@ -42,6 +39,11 @@ class Dokify
     delete @models[id].properties.$extend
     @
 
+  loadResources: ()->
+    @resources = (@getContentDir null, null, false)['resources']
+    console.log '- Resources loaded'
+    @
+
   loadModels: ()->
     raw = extend raw or {}, obj for k, obj of @getContentDir 'models', '::'
     
@@ -52,22 +54,36 @@ class Dokify
 
     if @config.extendedModels
       @extendModel id for id, model of @models
+
+    console.log '- Models loaded'
     @
+
+  modelsForApis: (apis)->
+    simpleDatatypes = []
+    for api in apis
+        #responseClass
+      console.log api.operations 
+    []
 
   loadApis: ()->
     raw = @getContentDir 'apis'
-    for path, api of raw
-      @apis
+    for path, apis of raw
+      @apis[path] = extend {}, @resources,
+        resourcePath: '/' + path
+        apis: apis
+        models: @modelsForApis apis
 
-    console.log @apis
+    console.log '- Apis loaded'
+    @
 
-{ pet: 
-   { path: '/pet.{format}/{petId}',
-     description: 'Operations about pets',
-     operations: [ [Object], [Object] ] } }
+  writeResources: ()->
+    fs.writeFileSync @config.output + '/resources.json', JSON.stringify @resources
+    console.log '- Resources writed'
+    @
 
-  generateResource: ()->
-
-  generateApis: ()->
+  writeApis: ()->
+    fs.writeFileSync @config.output + '/' + path + '.json', JSON.stringify apis for path, apis of @apis
+    console.log '- Apis writed'
+    @
 
 module.exports = Dokify
