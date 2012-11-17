@@ -1,4 +1,4 @@
-Pet$small:
+Pet$base:
   id:
     type: "Long"
   tag:
