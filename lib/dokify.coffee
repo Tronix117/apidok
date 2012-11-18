@@ -16,7 +16,7 @@ class Dokify
 
   constructor: (config)->
     extend @config, config
-    console.log '= Building documentation in `' + @config.output + '`:'
+    console.log '= Fenerating documentation in `' + @config.output + '`:'
     @loadResources().loadModels().loadApis().writeResources().writeApis()
     console.log '= Success!!'
 

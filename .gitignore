@@ -20,3 +20,9 @@ reports/*
 swagger-ui.sublime-workspace
 .idea
 .project
+.DS_Store
+node_modules
+npm-debug.log
+.settings
+.project
+log/*
