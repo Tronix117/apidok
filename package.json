@@ -11,6 +11,9 @@
   "engines": {
     "node": "0.8 || 0.9"
   },
+  "bin": {
+    "apidok": "./bin/apidok"
+  },
   "scripts": {
     "clean": "bin/apidok clean",
     "dist": "bin/apidok dist",
@@ -23,7 +26,7 @@
     "jasmine": "1.1.0",
     "stylus": "0.27.2",
 
-    "handlebars": "> 0"
+    "handlebars": "~1.0.6"
   },
   "devDependencies": {
   }

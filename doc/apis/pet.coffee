@@ -26,13 +26,4 @@
         code:   404
         reason: "The user cannot be found"
     ]
-  ,
-    httpMethod:     "GET"
-    nickname:       "getPetById"
-    responseClass:  "Pet"
-    parameters:     [ ]
-    summary:        "Find pet by its unique ID"
-    notes:          "Only Pets which you have permission to see will be returned"
-    errorResponses: [ ]
-  ]
 ]

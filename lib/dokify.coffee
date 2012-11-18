@@ -8,10 +8,13 @@ class Dokify
   models: {}
   apis: {}
   resources: {}
+  roles
   config: 
     input: ''
     output: ''
+    version: null
     extendedModels: false
+    enableRoles: false
     simpleDatatypes: ['path', 'void', 'byte', 'boolean', 'int', 'long', 'float', 'double', 'string', 'Date']
 
   constructor: (config)->
@@ -43,7 +46,16 @@ class Dokify
     @
 
   loadResources: ()->
-    @resources = (@getContentDir null, null, false)['resources']
+    raw = (@getContentDir null, null, false)['resources']
+    
+    if @config.enableRoles then @roles = raw.roles
+    else @roles = ['all']
+
+    for role in @roles
+      @resources[role] = extend {}, raw # copy of object
+      @resources[role].apis = [] # reset
+      (@resources[role].apis.push api if not api.roles or -1 < api.roles.indexOf role) for api in raw.apis
+
     console.log '-- Resources loaded'
     @
 
@@ -85,22 +97,35 @@ class Dokify
 
   loadApis: ()->
     raw = @getContentDir 'apis'
-    for path, apis of raw
-      @apis[path] = extend {}, @resources,
-        resourcePath: '/' + path
-        apis: apis
-        models: @modelsForApis apis
+    for role in @roles
+      @apis[role] = {}
+      for path, apis of raw
+        if role == 'all' then apisRole = apis
+        else
+          apisRole = []
+          for api in apis
+            _api = extend {}, api
+            _api.operations = []
+            for operation in api.operations
+              _api.operations.push operation if not operation.roles or -1 < operation.roles.indexOf role
+            apisRole.push apis if apis.operations.length
+
+        @apis[role][path] = extend {}, @resources,
+          resourcePath: '/' + path
+          apis: apisRole
+          models: @modelsForApis apis
 
     console.log '-- Apis loaded'
     @
 
   writeResources: ()->
-    fs.writeFileSync @config.output + '/resources.json', JSON.stringify @resources
+    fs.writeFileSync @config.output + (@config.version ? '/' + @config.version : '') + (role != 'all' ? '/' + role : '') + '/resources.json', JSON.stringify @resources[role] for role in @roles
     console.log '-- Resources writed'
     @
 
   writeApis: ()->
-    fs.writeFileSync @config.output + '/' + path + '.json', JSON.stringify apis for path, apis of @apis
+    for role in @roles
+      fs.writeFileSync @config.output + (@config.version ? '/' + @config.version : '') + (role != 'all' ? '/' + role : '') + '/' + path + '.json', JSON.stringify apis for path, apis of @apis[role]
     console.log '-- Apis writed'
     @
 
