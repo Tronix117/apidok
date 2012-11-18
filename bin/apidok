@@ -1,0 +1,3 @@
+#!/bin/sh
+echo $@
+#coffee ../app/main.coffee $@

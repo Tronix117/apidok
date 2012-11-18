@@ -1,0 +1,30 @@
+{
+  "author": "Jeremy Trufier <jeremy@trufier.com>",
+  "name": "apidok",
+  "description": "",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Tronix117/apidok",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Tronix117/apidok.git"
+  },
+  "engines": {
+    "node": "0.8 || 0.9"
+  },
+  "scripts": {
+    "clean": "bin/apidok clean",
+    "dist": "bin/apidok dist",
+    "spec": "bin/apidok spec",
+    "watch": "bin/apidok watch",
+    "help": "bin/apidok help"
+  },
+  "dependencies": {
+    "coffee-script":"1.4.0",
+    "jasmine": "1.1.0",
+    "stylus": "0.27.2",
+
+    "handlebars": "> 0"
+  },
+  "devDependencies": {
+  }
+}
