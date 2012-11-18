@@ -54,7 +54,7 @@ class Dokify
     for role in @roles
       @resources[role] = extend {}, raw # copy of object
       @resources[role].apis = [] # reset
-      (@resources[role].apis.push api if not api.roles or -1 < api.roles.indexOf role) for api in raw.apis
+      (@resources[role].apis.push api if not api.roles or -1 < ([].concat api.roles).indexOf role) for api in raw.apis
 
     console.log '-- Resources loaded'
     @
@@ -107,7 +107,7 @@ class Dokify
             _api = extend {}, api
             _api.operations = []
             for operation in api.operations
-              _api.operations.push operation if not operation.roles or -1 < operation.roles.indexOf role
+              _api.operations.push operation if not operation.roles or -1 < ([].concat operation.roles).indexOf role
             apisRole.push apis if apis.operations.length
 
         @apis[role][path] = extend {}, @resources,
