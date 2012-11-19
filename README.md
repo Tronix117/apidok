@@ -1,98 +1,85 @@
-Swagger UI
+NOT FULLY WORKING YET, WORK IN PROGRESS
 ==========
 
-Swagger UI is part of [Swagger](http://swagger.wordnik.com/) project.  The Swagger project allows you to produce, visualize and consume your OWN RESTful
+
+Apidok
+==========
+
+Apidok is based on Swagger UI, part of [Swagger](http://swagger.wordnik.com/) project. The Swagger project allows you to produce, visualize and consume your OWN RESTful
 services.  No proxy or 3rd party services required.  Do it your own way.
 
-Swagger UI is a dependency-free collection of HTML, Javascript, and CSS assets that dynamically 
+Swagger UI (adapted inside Apidok), is a dependency-free collection of HTML, Javascript, and CSS assets that dynamically 
 generate beautiful documentation and sandbox from a [Swagger-compliant](https://github.com/wordnik/swagger-core/wiki) API. Because Swagger UI has no
 dependencies, you can host it in any server environment, or on your local machine.
 
-How to Use It
+Apidok improves the way to document your REST API, key features are:
+
+* Using npm instead of cake
+* Retrocompatibility with Swagger UI (output generated files are made to be used directly with Swagger UI)
+* Documentation written in CoffeeScript
+* Documentation is simplified compared to raw Swagger files
+* Inheritence for models (model can be extend from other model, if for example depending on calls, the response is not totaly the same)
+* Easiest track of api versions ( http://api.doc/v2.1/resources.json)
+* Adding role supports. Define some roles, add constraints over those roles, each role will have a optimized documentation. For instance, a user and a manager may not have the same access to the api, it's possible to hide some operations in the user doc: http://api.doc/v2.1/user/resources.json
+* Soon... Rdoc compatibility ;)
+
+
+How to
 -------------
 
-### Download
-You can use the swagger-ui code AS-IS!  No need to build or recompile--just [download](https://github.com/wordnik/swagger-ui/downloads) the distribution,
-unpack and start using it.  If you like swagger-ui as-is, stop here.
+### Preparation
 
-### Build
-You can rebuild swagger-ui on your own to tweak it or just so you can say you did.  To do so, follow these steps:
- 
-1. Install [CoffeeScript](http://coffeescript.org/#installation) which will give you [cake](http://coffeescript.org/#cake)
-2. Install [handlebars](http://handlebarsjs.com/) using 'npm install handlebars -g'
-3. Run cake dist
-4. You should see the distribution under the dist folder. Open ./dist/index.html to launch Swagger UI in a browser
+1. Install [node.js](http://nodejs.org)
+2. On your system execute following commands (Unix)
+
+```bash
+git clone git@github.com:Tronix117/apidok.git
+cd apidok
+npm install
+```
+
+Apidok is now ready to use !!
+
+### Document
+
+In a folder, document your api using the same structure you can find in the `example` folder. Checkout [Swagger Spec](https://github.com/wordnik/swagger-core/wiki) for more advanced stuff.
+
+### Generate
+
+Go to the apidok directory and run `bin/apidok dist`
+
+By default the documentation will be retrieve from the 'doc' folder and the generated website will be in 'dist'
+
+You can find more option to the `apidok` script in the *apidok command* section
 
 ### Use
-Once you open the Swagger UI, it will load the [Swagger Petstore](http://petstore.swagger.wordnik.com/api/resources.json) service and show its APIs.
-You can enter your own server url and click explore to view the API.
 
-### Customize
-You may choose to customize Swagger UI for your organization. Here is an overview of whats in its various directories:
-
--    dist: Contains a distribution which you can deploy on a server or load from your local machine.
--    bin: Contains files used by swagger-ui for its build/test. These are not required by the distribution.
--    lib: Contains javascript dependencies which swagger-ui depends on
--    node_modules: Contains node modules which swagger-ui uses for its development.
--    src
-    -    src/main/coffeescript: main code in CoffeeScript
-    -    src/main/templates: [handlebars](http://handlebarsjs.com/) templates used to render swagger-ui
-    -    src/main/html: the html files, some images and css
-    -    src/main/javascript: some legacy javascript referenced by CofffeeScript code
-
-### SwaggerUi
-To use swagger-ui you should take a look at the [source of swagger-ui html page](https://github.com/wordnik/swagger-ui/tree/master/src/main/html) and customize it. This basically requires you to instantiate a SwaggerUi object and call load() on it as below:
-```javascript
-    window.swaggerUi = new SwaggerUi({
-        discoveryUrl:"http://petstore.swagger.wordnik.com/api/resources.json",
-        dom_id:"swagger-ui-container",
-        apiKey:"special-key",
-        supportHeaderParams: false,
-        headers: { "Authorization": "XXXX", "someOtherHeader": "YYYY" },
-        supportedSubmitMethods: ['get', 'post', 'put']
-    });
-
-    window.swaggerUi.load();
-```
-* *discoveryUrl* parameter should point to a resource listing url as per [Swagger Spec](https://github.com/wordnik/swagger-core/wiki)
-* *dom_id parameter* is the the id of a dom element inside which SwaggerUi will put the user interface for swagger
-* *booleanValues* SwaggerUI renders boolean data types as a dropdown. By default it provides a 'true' and 'false' string as the possible choices. You can use this parameter to change the values in dropdown to be something else, for example 0 and 1 by setting booleanValues to new Array(0, 1)
-* *docExpansion* controls how the API listing is displayed. It can be set to 'none' (default), 'list' (shows operations for each resource), or 'full' (fully expanded: shows operations and their details)
-* *onComplete* is a callback function parameter which can be passed to be notified of when SwaggerUI has completed rendering successfully.
-* *onFailure* is a callback function parameter which can be passed to be notified of when SwaggerUI encountered a failure was unable to render.
-* All other parameters are explained in greater detail below
+You can now directly open the index.html in the `dist` folder, and you will get your documentation! You can then, host that wherever you want.
 
 
-### HTTP Methods and API Invocation
-swagger-ui supports invocation of all HTTP methods APIs but only GET methods APIs are enabled by default. You can choose to enable other HTTP methods like POST, PUT and DELETE. This can be enabled by [setting the supportedSubmitMethods parameter when creating SwaggerUI instance](https://github.com/wordnik/swagger-ui/blob/f2e63c65a759421aad590b7275371cd0c06c74ea/src/main/html/index.html#L49). 
+### apidok command
 
-For example if you wanted to enable GET, POST and PUT but not for DELETE, you'd set this as: 
+#### apidok dist
+Generate the documentation website
+* `-i <doc>, --input=<doc>` Specify where you want the documentation to be generated, `doc` is the default folder
+* `-o <dist>, --output=<dist>` Specify where you want the documentation to be generated, `dist` is the default folder
+* `-v <version>, --version=<version>` Enable the documentation versioning, will generate the documentation in `<output>/<version>`
+* `--extended-odels` Whether or not models can be extended, in this case `pet$default` will be the same as `pet`, and you can create for instance a `pet$detailled` which has a key `$extend: pet$demfault`. Value from `pet$default` will be copied inside `pet$detailled`
+* `--enable-roles` Roles can be defined in the root of the resources.coffee: `roles: ['User', 'Manager', 'Admin']`, and a `roles` key can be added to api objects in the resources.coffee or to operation object in apis files. This key can be a string: `roles: 'User'`, or an array: `roles: ['Manager', 'Admin']`, if ommited, it means the call is accessible by everybody
 
-    supportedSubmitMethods: ['get', 'post', 'put']
+#### apidok watch
+Soon...
 
-_Note that for POST/PUT body, you'd need to paste in the request data in an appropriate format which your service can unmarshall_
+#### apidok clean
+Soon...
 
-### Header Parameters
-header parameters are supported. However because of [Cross-Origin Resource Sharing](http://www.w3.org/TR/cors/) restrictions, swagger-ui, by default, does not send header parameters. This can be enabled by [setting the supportHeaderParams to true when creating SwaggerUI instance](https://github.com/wordnik/swagger-ui/blob/f2e63c65a759421aad590b7275371cd0c06c74ea/src/main/html/index.html#L48) as below:
+#### apidok spec
+Soon...
 
-    supportHeaderParams: true
+#### apidok help
+Will display something similar to this section
 
-### Custom Header Parameters - (For Basic auth etc)
-If you have some header parameters which you need to send with every request, use the headers as below:
 
-     headers: { "Authorization": "XXXX", "someOtherHeader": "YYYY" }
-
-### Api Key Parameter
-If you enter an api key in swagger-ui, it sends a parameter named 'api\_key' as a query (or as a header param if you've enabled it as described above). You may not want to use the name 'api\_key' as the name of this parameter. You can change its name by setting the _apiKeyName_ parameter when you instantiate a SwaggerUI instance. For example to call it 'sessionId'
-
-    apiKeyName: "sessionId"
-
-How to Improve It
------------------
-
-Create your own fork of [wordnik/swagger-ui](https://github.com/wordnik/swagger-ui)
-
-To share your changes, [submit a pull request](https://github.com/wordnik/swagger-ui/pull/new/master).
 
 License
 -------
