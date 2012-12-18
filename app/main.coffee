@@ -82,11 +82,12 @@ class App
 
   watch: ->
     # Function which watches all files in the passed directory
-    watchFiles = (dir) ->
+    watchFiles = (dir, recursive) =>
       files = fs.readdirSync(dir)
-      for file, index in files then do (file, index) ->
-        console.log "   : " + dir + "/#{file}"
-        fs.watchFile dir + "/#{file}", (curr, prev) ->
+      for file, index in files then do (file, index) =>
+        return watchFiles(fp, true) if fs.statSync(fp = dir + '/' + file).isDirectory()
+        console.log "   : " + fp
+        fs.watchFile fp, (curr, prev) =>
           if +curr.mtime isnt +prev.mtime
             @dist()
 
@@ -103,6 +104,7 @@ class App
     watchFiles("app/templates")
     watchFiles("app/assets")
     watchFiles("app/tests")
+    watchFiles(@options.input, true)
 
   constructor: (options)->
     options = options or {}
