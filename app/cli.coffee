@@ -10,9 +10,6 @@ task = (alias, description, method)->
     description: description
     method: method
 
-runTask = (alias)-> tasks[alias] && tasks[alias].method()
-
-
 sourceFiles  = [
   'routers/SwaggerUi'
   'views/HeaderView'
@@ -125,4 +122,5 @@ notify = (message) ->
 #  try require('growl') message, options
 
 
-runTask 'dist'
+module.exports = (argv)->
+  console.log argv

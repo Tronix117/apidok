@@ -1,7 +1,30 @@
 #!/usr/bin/env coffee
 
-path = require('path');
-fs = require('fs');
+argv = require('optimist')
+  .usage('Generate an API documentation.\n\nUsage: apidok [COMMAND] [OPTIONS]\n\nCommands:\n  dist\t\tBuild and generate the documentation website\n  watch\t\tWatch source files for changes and autocompile\n  clean\t\tRemoves distribution\n  spec\t\tRun the test suite\n  help\t\tThis message')
+  .demand(1)
+  .alias
+    i: 'input'
+    o: 'output'
+    v: 'version'
+  .describe
+    i: 'Source of the documentation source files'
+    o: 'Destination of the generated documentation'
+    v: 'Enable the documentation versionning'
+    'extended-models': 'Whether or not models can be extended: pet$default, pet$detailled, ...'
+    'enable-roles': 'Roles based documentation. (roles need to be defined in resources.coffee)'
+  .boolean(['extended-models', 'enable-roles'])
+  .default
+    i: './doc'
+    o: './dist'
+  .check (argv)->
+    throw new Error('This is not a valid `apidok` command.') if 0 > ['dist','watch','clean','spec','help'].indexOf argv._[0]
+  .argv
 
-src = path.join(path.dirname(fs.realpathSync(__filename)), '..', 'src');
-require(path.join(src, 'cli')).run();
+path = require 'path'
+fs = require 'fs'
+
+src = path.join path.dirname(fs.realpathSync(__filename)), '..', 'app'
+
+return console.log require('optimist').help() if argv._[0] is 'help'
+require(path.join(src, 'cli')) argv

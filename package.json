@@ -25,6 +25,7 @@
     "coffee-script":"1.4.0",
     "jasmine": "1.1.0",
     "stylus": "0.27.2",
+    "optimist": "0.3.5",
 
     "handlebars": "~1.0.6"
   },
