@@ -45,11 +45,11 @@ task 'dist', 'Build a distribution', ->
 
   precompileTemplates= ->
     console.log '   : Precompiling templates...'
-    templateFiles  = fs.readdirSync('app/template')
+    templateFiles  = fs.readdirSync('app/templates')
     templateContents = new Array remaining = templateFiles.length
     for file, index in templateFiles then do (file, index) ->
-      console.log "   : Compiling app/template/#{file}"
-      exec "handlebars app/template/#{file} -f dist/_#{file}.js", (err, stdout, stderr) ->
+      console.log "   : Compiling app/templates/#{file}"
+      exec "handlebars app/templates/#{file} -f dist/_#{file}.js", (err, stdout, stderr) ->
         throw err if err
         fs.readFile 'dist/_' + file + '.js', 'utf8', (err, fileContents) ->
           throw err if err
@@ -123,3 +123,6 @@ notify = (message) ->
 #    title: 'CoffeeScript'
 #    image: 'bin/CoffeeScript.png'
 #  try require('growl') message, options
+
+
+runTask 'dist'
