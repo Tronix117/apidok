@@ -27,4 +27,6 @@ fs = require 'fs'
 src = path.join path.dirname(fs.realpathSync(__filename)), '..', 'app'
 
 return console.log require('optimist').help() if argv._[0] is 'help'
-require(path.join(src, 'cli')) argv
+
+App = require(path.join(src, 'main'))
+(new App argv)[argv._[0]]()
