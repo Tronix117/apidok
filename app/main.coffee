@@ -15,7 +15,7 @@ class App
   dist: ->
     console.log "Build distribution in ./#{@options.output}"
     fs.mkdirSync(@options.output) if not fs.existsSync(@options.output)
-    fs.mkdirSync("#{@options.output}/lib") if not fs.existsSync("#{@options.output}/lib")
+    fs.mkdirSync("#{@options.output}/javascripts") if not fs.existsSync("#{@options.output}/javascripts")
 
     appContents = new Array remaining = @sourceFiles.length
     for file, index in @sourceFiles then do (file, index) ->
@@ -54,18 +54,17 @@ class App
           throw err if err
           fs.unlink "#{@options.output}/_swagger-ui.coffee"
           console.log '   : Combining with javascript...'
-          exec "cat lib/doc.js #{@options.output}/_swagger-ui-templates.js #{@options.output}/_swagger-ui.js > #{@options.output}/swagger-ui.js", (err, stdout, stderr) =>
+          exec "cat lib/doc.js #{@options.output}/_swagger-ui-templates.js #{@options.output}/_swagger-ui.js > #{@options.output}/javascripts/swagger-ui.js", (err, stdout, stderr) =>
             throw err if err
             fs.unlink "#{@options.output}/_swagger-ui.js"
             fs.unlink "#{@options.output}/_swagger-ui-templates.js"
             console.log '   : Minifying all...'
-            exec 'java -jar "./bin/yuicompressor-2.4.7.jar" --type js -o ' + @options.output + '/swagger-ui.min.js ' + @options.output + '/swagger-ui.js', (err, stdout, stderr) =>
+            exec 'java -jar "./bin/yuicompressor-2.4.7.jar" --type js -o ' + @options.output + '/javascripts/swagger-ui.min.js ' + @options.output + '/javascripts/swagger-ui.js', (err, stdout, stderr) =>
               throw err if err
               pack()
 
     pack = =>
       console.log '   : Packaging...'
-      exec 'cp -r lib ' + @options.output
       exec 'cp -r app/assets/* ' + @options.output
       console.log '   !'
 
