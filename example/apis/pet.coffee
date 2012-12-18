@@ -26,4 +26,5 @@
         code:   404
         reason: "The user cannot be found"
     ]
+  ]
 ]

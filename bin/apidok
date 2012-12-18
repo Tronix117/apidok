@@ -15,7 +15,7 @@ argv = require('optimist')
     'enable-roles': 'Roles based documentation. (roles need to be defined in resources.coffee)'
   .boolean(['extended-models', 'enable-roles'])
   .default
-    i: './doc'
+    i: './example'
     o: './dist'
   .check (argv)->
     throw new Error('This is not a valid `apidok` command.') if 0 > ['dist','watch','clean','spec','help'].indexOf argv._[0]
