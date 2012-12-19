@@ -92,7 +92,10 @@ class Apidok
 
     (models = models.concat @modelsForModel @models[modelName] if @models[modelName]) for modelName in possibleModels
 
-    (models.filter (m, p)-> (models.indexOf m) == p) # Remove duplicated
+    #(models.filter (m, p)-> (models.indexOf m) == p) # Remove duplicated
+    _models = {}
+    _models[model.id] = model for model in models
+    _models
 
   loadApis: ->
     raw = @getContentDir 'apis'
@@ -109,7 +112,7 @@ class Apidok
               _api.operations.push operation if not operation.roles or -1 < ([].concat operation.roles).indexOf role
             apisRole.push _api #if api.operations.length
 
-        @apis[role][path] = extend {}, @resources,
+        @apis[role][path] = extend {}, @resources[role],
           resourcePath: '/' + path
           apis: apisRole
           models: @modelsForApis apis

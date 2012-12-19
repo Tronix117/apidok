@@ -1,6 +1,6 @@
 apiVersion:     "0.2"
 swaggerVersion: "1.1"
-basePath:       "http://petstore.swagger.wordnik.com/api"
+basePath:       "./docs"
 apis:           [
     path: "/pet.{format}"
     description: "Operations about pets"
