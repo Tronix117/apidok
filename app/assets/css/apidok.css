@@ -1,0 +1,7 @@
+body #header {
+  background: #05afde;
+}
+
+#header .input label {
+  color: #fff;
+}
