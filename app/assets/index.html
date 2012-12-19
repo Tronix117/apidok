@@ -45,7 +45,7 @@
     <script type="text/javascript">
         $(function () {
             window.swaggerUi = new SwaggerUi({
-                discoveryUrl:"./docs/resources.json",
+                discoveryUrl:"docs/resources.json",
                 apiKey:"special-key",
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: false,
@@ -85,9 +85,8 @@
             <div class='input icon-btn'>
                 <img id="show-wordnik-dev-icon" src="images/wordnik_api.png" title="Show Wordnik Developer Apis">
             </div>
-            <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl"
-                                      type="text"/></div>
-            <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+            <div class='input'>Version: <select><option>2.0</option><option>2.1</option><option>2.2</option><option>2.3</option></select></div>
+            <div class='input'>Role: <select><option>Administrator</option><option>Manager</option><option>Employee</option><option>Consumer</option></select></div>
             <div class='input'><a id="explore" href="#">Explore</a></div>
         </form>
     </div>
