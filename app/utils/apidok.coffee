@@ -53,6 +53,8 @@ class Apidok
     for role in @roles
       @resources[role] = extend {}, raw # copy of object
       @resources[role].apis = [] # reset
+      @resources[role].discoveryUrl = @resources[role].basePath
+      @resources[role].basePath = @resources[role].apiUrl if @resources[role].apiUrl?
       (@resources[role].apis.push api if not api.roles or -1 < ([].concat api.roles).indexOf role) for api in raw.apis
 
     console.log '     + Resources loaded'
@@ -121,7 +123,10 @@ class Apidok
     @
 
   writeResources: ->
-    fs.writeFileSync(@config.output + (@config.version and '/' + @config.version or '') + (role isnt 'all' and '/' + role or '') + '/resources.json', JSON.stringify(@resources[role])) for role in @roles
+    for role in @roles
+      @resources[role].basePath = @resources[role].discoveryUrl
+      delete @resources[role].discoveryUrl
+      fs.writeFileSync(@config.output + (@config.version and '/' + @config.version or '') + (role isnt 'all' and '/' + role or '') + '/resources.json', JSON.stringify(@resources[role]))
     console.log '     + Resources writed'
     @
 

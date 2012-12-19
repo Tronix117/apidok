@@ -1,3 +1,0 @@
-[submodule "lib/swagger.js"]
-	path = lib/swagger.js
-	url = git://github.com/wordnik/swagger.js.git
