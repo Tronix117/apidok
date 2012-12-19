@@ -46,9 +46,9 @@ In a folder, document your api using the same structure you can find in the `exa
 
 ### Generate
 
-Go to the apidok directory and run `bin/apidok dist`
+Go to the apidok directory and run `bin/apidok dist --extended-models`
 
-By default the documentation will be retrieve from the 'doc' folder and the generated website will be in 'dist'
+By default the documentation will be retrieve from the 'exemple' folder and the generated website will be in 'dist'
 
 You can find more option to the `apidok` script in the *apidok command* section
 
