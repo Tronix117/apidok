@@ -9,6 +9,7 @@ class Apidok
   apis: {}
   resources: {}
   roles: ['all']
+  docConfig: {}
   config: 
     input: ''
     output: ''
@@ -20,7 +21,7 @@ class Apidok
   constructor: (config)->
     extend @config, config
     console.log "   : Generate documentation in #{@config.output}"
-    @loadResources().loadModels().loadApis().writeResources().writeApis()
+    @loadBase().loadModels().loadApis().writeResources().writeApis()
     console.log '   : Documentation generated!!'
 
   getContentDir: (baseprefix = '', aliasSeparator = '/', recursive = true, prefix = '')->
@@ -45,17 +46,30 @@ class Apidok
     delete @models[id].properties.$extend
     @
 
-  loadResources: ->
-    raw = (@getContentDir null, null, false)['resources']
-    
-    @roles = raw.roles if @config.enableRoles
+  loadBase: ->
+    raw = (@getContentDir null, null, false)
+
+    return console.error '     - Missing require file: `apis.coffee` does not exist in the doc path' unless raw['apis']
+    return console.error '     - Missing require file: `config.coffee` does not exist in the doc path' unless raw['config']
+
+    config = raw['config']
+    @roles = config.roles if @config.enableRoles
+    @docConfig = extend {}, config
+
+    delete config.headers
+    delete config.apiCurrentVersion
+    delete config.apiVersions
+    delete config.roles
+
+    @docConfig.discoveryUrl = @docConfig.basePath or './docs'
+
+    console.log('docconfig', @docConfig)
 
     for role in @roles
       @resources[role] = extend {}, raw # copy of object
       @resources[role].apis = [] # reset
-      @resources[role].discoveryUrl = @resources[role].basePath
-      @resources[role].basePath = @resources[role].apiUrl if @resources[role].apiUrl?
-      (@resources[role].apis.push api if not api.roles or -1 < ([].concat api.roles).indexOf role) for api in raw.apis
+      @resources[role].basePath = @docConfig.apiUrl or @docConfig.discoveryUrl
+      (@resources[role].apis.push api if not api.roles or -1 < ([].concat api.roles).indexOf role) for api in resources
 
     console.log '     + Resources loaded'
     @
@@ -124,8 +138,7 @@ class Apidok
 
   writeResources: ->
     for role in @roles
-      @resources[role].basePath = @resources[role].discoveryUrl
-      delete @resources[role].discoveryUrl
+      @resources[role].basePath = @docConfig.discoveryUrl
       fs.writeFileSync(@config.output + (@config.version and '/' + @config.version or '') + (role isnt 'all' and '/' + role or '') + '/resources.json', JSON.stringify(@resources[role]))
     console.log '     + Resources writed'
     @
