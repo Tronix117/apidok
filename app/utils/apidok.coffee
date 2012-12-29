@@ -69,7 +69,7 @@ class Apidok
       @resources[role] = extend {}, raw # copy of object
       @resources[role].apis = [] # reset
       @resources[role].basePath = @docConfig.apiUrl or @docConfig.discoveryUrl
-      (@resources[role].apis.push api if not api.roles or -1 < ([].concat api.roles).indexOf role) for api in resources
+      (@resources[role].apis.push api if not api.roles or -1 < ([].concat api.roles).indexOf role) for api in raw['apis']
 
     console.log '     + Resources loaded'
     @

@@ -1,0 +1,24 @@
+#!/usr/local/bin/node
+
+var 
+  static = require('node-static'),
+  folderName = require('path').basename(require.main.filename).replace('serve-','').replace('.js',''),
+  folderPath = require('path').dirname(require.main.filename) + '/' + folderName
+  file = new static.Server(folderPath, {cache:false}),
+  serve = function(port){
+    require('http').createServer(function (request, response) {
+      console.log('+' + request.method + '+ ' + request.url);
+      request.addListener('end', function () {
+          file.serve(request, response);
+      });
+    }).listen(port, function(){
+      console.log('Listening on ' + port);
+      console.log('Serving ' + folderPath);
+    }).on('error', function(e){
+      if(e.code == 'EADDRINUSE') 
+        return serve(port + 1);
+      console.error('An error occured: ', e.message);
+    });
+  };
+
+  serve(8080);
