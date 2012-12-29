@@ -31,10 +31,14 @@ class SwaggerUi extends Backbone.Router
     @options.failure = (d) => @onLoadFailure(d)
 
     # Create view to handle the header inputs
-    @headerView = new HeaderView({el: $('#header')})
-
-    # Event handler for when the baseUrl/apiKey is entered by user
-    @headerView.on 'update-swagger-ui', (data) => @updateSwaggerUi(data)
+    model = new Backbone.Model
+      role: @options.role
+      version: @options.version
+      roleList: CONFIG.roles
+      versionList: CONFIG.apiVersions
+    model.on 'change:role change:version', (model, value, changed)=> @api[key] = value if change for key, change of changed.changes
+        
+    @headerView = new HeaderView({model: model, el: $('#header')}).render()
 
   # Event handler for when url/key is received from user
   updateSwaggerUi: (data) ->
@@ -45,8 +49,9 @@ class SwaggerUi extends Backbone.Router
   load: ->
     # Initialize the API object
     @mainView?.clear()
-    @headerView.update() #version, role)
     @api = new SwaggerApi(@options)
+    @api.role = @options.role
+    @api.version = @options.version
 
   # This is bound to success handler for SwaggerApi
   #  so it gets called when SwaggerApi completes loading

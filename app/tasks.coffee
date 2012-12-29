@@ -116,7 +116,7 @@ class App
       roles: options['enable-roles']
       version: options.version or false
 
-    @sourceFiles = ['app/main.coffee'].concat (dir + '/' + file for file in fs.readdirSync(dir) for dir in ['app/routers', 'app/views']).reduce (prev,current)->(prev || []).concat current
+    @sourceFiles = ((dir + '/' + file for file in fs.readdirSync(dir) for dir in ['app/routers', 'app/views']).reduce (prev,current)->(prev || []).concat current).concat ['app/main.coffee']
     @
 
 notify = (message) ->

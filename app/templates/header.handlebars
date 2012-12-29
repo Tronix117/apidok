@@ -1,0 +1,29 @@
+<div class="swagger-ui-wrap">
+  <a id="logo" href="https://github.com/Tronix117/apidok">Apidok</a>
+  <form id='api_selector'>
+    <div class='input'>
+      <label>API Version: </label>
+      <select data-type="version">
+        {{#each attributes.versionList}}
+          {{#ifCond this attributes.version}}
+            <option value="{{this}}" selected="selected">{{this}}</option>
+          {{else}}
+            <option value="{{this}}">{{this}}</option>
+          {{/ifCond}}
+        {{/each}}
+      </select>
+    </div>
+    <div class='input'>
+      <label>Role: </label>
+      <select data-type="role">
+        {{#each attributes.roleList}}
+          {{#ifCond this attributes.role}}
+            <option value="{{this}}" selected="selected">{{this}}</option>
+          {{else}}
+            <option value="{{this}}">{{this}}</option>
+          {{/ifCond}}
+        {{/each}}
+      </select>
+    </div>
+  </form>
+</div>

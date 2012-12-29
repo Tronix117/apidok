@@ -1,13 +1,6 @@
 class HeaderView extends Backbone.View
-  events:
-    'click #explore'                : 'changeRole'
-    'keyup #input_apiKey'           : 'changeRole'
+  events: 'change #api_selector select': 'changeSetting'
 
-  initialize: ->
+  render: -> $(@el).html Handlebars.templates.header @model
 
-  changeRole: ->
-    @update()
-
-  update: (version, role, trigger) ->
-    apiKey = 'getNewApiKeyForRoleAndVersion'
-    @trigger 'update-swagger-ui', {apiKey:apiKey} if trigger
+  changeSetting: (e)-> @model.set ($el = $(e.target)).attr('data-type'), $el.val()
