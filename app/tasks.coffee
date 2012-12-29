@@ -6,7 +6,7 @@ fs.existsSync = fs.existsSync || path.existsSync # retrocompatibility node.js
 
 class App
 
-  sourceFiles: ['app/main.coffee'].concat (dir + '/' + file for file in fs.readdirSync(dir) for dir in ['app/routers', 'app/views']).reduce (prev,current)->(prev || []).concat current
+  sourceFiles: []
 
   clean: ->
     console.log 'Clearing dist...'
@@ -16,13 +16,14 @@ class App
     console.log "Build distribution in ./#{@options.output}"
     fs.mkdirSync(@options.output) if not fs.existsSync(@options.output)
     fs.mkdirSync("#{@options.output}/js") if not fs.existsSync("#{@options.output}/js")
-
-    appContents = new Array remaining = @sourceFiles.length
+    configContent = 'window.CONFIG = ' + fs.readFileSync @options.input + '/config.coffee', 'utf8'
+    appContents = [configContent]
+    remaining = @sourceFiles.length
     for file, index in @sourceFiles then do (file, index) ->
       console.log "   : Reading #{file}"
       fs.readFile file, 'utf8', (err, fileContents) ->
         throw err if err
-        appContents[index] = fileContents
+        appContents.push fileContents
         precompileTemplates() if --remaining is 0
     @_generateDoc()
 
@@ -114,6 +115,9 @@ class App
       'extended-models': options['extended-models'] 
       roles: options['enable-roles']
       version: options.version or false
+
+    @sourceFiles = ['app/main.coffee'].concat (dir + '/' + file for file in fs.readdirSync(dir) for dir in ['app/routers', 'app/views']).reduce (prev,current)->(prev || []).concat current
+    @
 
 notify = (message) ->
   return unless message?

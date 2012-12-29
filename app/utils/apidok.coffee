@@ -63,8 +63,6 @@ class Apidok
 
     @docConfig.discoveryUrl = @docConfig.basePath or './docs'
 
-    console.log('docconfig', @docConfig)
-
     for role in @roles
       @resources[role] = extend {}, raw # copy of object
       @resources[role].apis = [] # reset

@@ -1,10 +1,24 @@
 #basePath:       "./docs"
-apiUrl:         "http://petstore.swagger.wordnik.com/api"
+title: "Apidok"
+swaggerVersion: "1.1"
+apiUrl: "http://petstore.swagger.wordnik.com/api"
+apiKey: null
+apiKeyName: "X-AccessToken"
 apiCurrentVersion: "0.2"
 apiVersions: ["0.2"]
-roles: ["Administrator", "Manager", "Employee", "Consumer"]
-headers: []
-swaggerVersion: "1.1"
-modifiers:
-  changeRole: (swaggerOptions, callback, jQuery)-> callback null, true
-  changeVersion: (swaggerOptions, callback, jQuery)-> callback null, true
+roles: ["Consumer", "Employee", "Manager", "Administrator"]
+headers: 
+  "X-App-Id": "com.apidok.doc"
+  "Accept-Language": "en-US"
+beforeLoad: (callback)-> CONFIG.onVersionChange.call @, ()=> CONFIG.onRoleChange.call @, callback
+afterLoad: ()->
+onRoleChange: (callback)->
+  callback() # placeholder because the code exemple bellow doesn't work with swagger api
+
+  @$.post CONFIG.apiUrl + '/sessions', { role: @api.role }, (data)->
+    @api.apiKey = data.access_token
+    callback()
+  , 'json'
+onVersionChange: (callback)-> 
+  @api.headers['X-Api-Version'] = @api.version
+  callback()
