@@ -35,17 +35,17 @@ class SwaggerUi extends Backbone.Router
     @options.failure = (d) => @onLoadFailure(d)
 
     # Create view to handle the header inputs
-    model = new Backbone.Model
-      role: @options.role
-      version: @options.version
-      roleList: CONFIG.roles
-      versionList: CONFIG.apiVersions
+    attributes = {}
+    for name, setting in CONFIG.settings
+      attributes[name] = @options[name]
+      attributes[name + 'List'] = setting.list
+
+    model = new Backbone.Model attributes
     model.on 'change:role change:version', (model, value, changed)=> 
       for key, change of changed.changes
         if change
-          @options[key] = value 
-          callback = ()=> @load()
-          if ev = @options['on' + key.capitalize + 'Change'] then ev(callback) else callback()
+          @options[key] = value
+          if ev = CONFIG.settings[key]['onChange'] then ev.call @, @load else @load()
         
     @headerView = new HeaderView({model: model, el: $('#header')}).render()
 
@@ -54,8 +54,6 @@ class SwaggerUi extends Backbone.Router
     # Initialize the API object
     @mainView?.clear()
     @api = new SwaggerApi(@options)
-    @api.role = @options.role
-    @api.version = @options.version
 
   # This is bound to success handler for SwaggerApi
   #  so it gets called when SwaggerApi completes loading

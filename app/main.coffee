@@ -6,8 +6,6 @@ window.swaggerUi = new SwaggerUi
   dom_id: "swagger-ui-container"
   supportHeaderParams: true
   supportedSubmitMethods: ['get', 'post', 'put']
-  version: CONFIG.currentVersion or _.last CONFIG.apiVersions
-  role: CONFIG.roles?[0]
   onComplete: (swaggerApi, swaggerUi)->
     if console
       console.log "Loaded SwaggerUI"
@@ -22,9 +20,12 @@ window.swaggerUi = new SwaggerUi
   docExpansion: "none"
 
 window.swaggerUi.$ = $
-#window.swaggerUi.api = window.swaggerUi.options # for the beforeLoad, otherwise .api doesn't exist. @fixme find a cleaner way
 
 $ ()->
+  # Custom settings
+  window.swaggerUi.options[name] = setting.default or _.last setting.list for name, setting of CONFIG.settings
+
+  # BeforeLoad trigger
   CONFIG.beforeLoad?.call(window.swaggerUi, ()-> window.swaggerUi.load()) or  window.swaggerUi.load()
 
   if CONFIG.title
