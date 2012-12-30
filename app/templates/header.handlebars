@@ -5,11 +5,7 @@
       <label>API Version: </label>
       <select data-type="version">
         {{#each attributes.versionList}}
-          {{#ifCond this attributes.version}}
-            <option value="{{this}}" selected="selected">{{this}}</option>
-          {{else}}
-            <option value="{{this}}">{{this}}</option>
-          {{/ifCond}}
+          <option value="{{this}}">{{this}}</option>
         {{/each}}
       </select>
     </div>
@@ -17,11 +13,7 @@
       <label>Role: </label>
       <select data-type="role">
         {{#each attributes.roleList}}
-          {{#ifCond this attributes.role}}
-            <option value="{{this}}" selected="selected">{{this}}</option>
-          {{else}}
-            <option value="{{this}}">{{this}}</option>
-          {{/ifCond}}
+          <option value="{{this}}">{{this}}</option>
         {{/each}}
       </select>
     </div>

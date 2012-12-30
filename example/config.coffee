@@ -16,10 +16,10 @@ onRoleChange: (callback)->
   callback() # placeholder because the code exemple bellow doesn't work with swagger api
 
   @showMessage "Obtaining access for role #{@api.role}..."
-  @$.post CONFIG.apiUrl + '/sessions/dummy', { role: @api.role }, (data)->
-    @api.apiKey = data.access_token
+  @$.post CONFIG.apiUrl + '/sessions/dummy', { role: @options.role }, (data)->
+    @options.apiKey = data.access_token
     callback()
   , 'json'
 onVersionChange: (callback)-> 
-  @api.headers['X-Api-Version'] = @api.version
+  @options.headers['X-Api-Version'] = @options.version
   callback()

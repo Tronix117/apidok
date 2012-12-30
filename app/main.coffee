@@ -1,7 +1,3 @@
-Handlebars.registerHelper 'ifCond', (v1, v2, options)->
-  return options.fn this if(v1 == v2)
-  options.inverse(this);
-
 window.swaggerUi = new SwaggerUi
   discoveryUrl: (CONFIG.basePath || './docs') + (CONFIG.resourcesFilename || '/resources.json')
   apiKey: CONFIG.apiKey || 'api-key'
@@ -10,7 +6,7 @@ window.swaggerUi = new SwaggerUi
   dom_id: "swagger-ui-container"
   supportHeaderParams: true
   supportedSubmitMethods: ['get', 'post', 'put']
-  version: CONFIG.currentVersion
+  version: CONFIG.currentVersion or _.last CONFIG.apiVersions
   role: CONFIG.roles?[0]
   onComplete: (swaggerApi, swaggerUi)->
     if console
@@ -26,9 +22,11 @@ window.swaggerUi = new SwaggerUi
   docExpansion: "none"
 
 window.swaggerUi.$ = $
-window.swaggerUi.api = window.swaggerUi.options # for the beforeLoad, otherwise .api doesn't exist. @fixme find a cleaner way
+#window.swaggerUi.api = window.swaggerUi.options # for the beforeLoad, otherwise .api doesn't exist. @fixme find a cleaner way
 
 $ ()->
   CONFIG.beforeLoad?.call(window.swaggerUi, ()-> window.swaggerUi.load()) or  window.swaggerUi.load()
 
-  $('a#logo').html CONFIG.title if CONFIG.title
+  if CONFIG.title
+    $('a#logo').html CONFIG.title
+    document.title = CONFIG.title

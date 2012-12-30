@@ -2,6 +2,10 @@ window.extend = (target)->
   target[name] = arg[name] for name in Object.keys arg for arg in arguments
   target
 
+_.mixin capitalize: (string)-> string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
+
+Handlebars.registerHelper 'ifCond', (v1, v2, options)-> if v1 == v2 then options.fn this else options.inverse this
+
 class SwaggerUi extends Backbone.Router
 
   # Defaults
@@ -36,14 +40,14 @@ class SwaggerUi extends Backbone.Router
       version: @options.version
       roleList: CONFIG.roles
       versionList: CONFIG.apiVersions
-    model.on 'change:role change:version', (model, value, changed)=> @api[key] = value if change for key, change of changed.changes
+    model.on 'change:role change:version', (model, value, changed)=> 
+      for key, change of changed.changes
+        if change
+          @options[key] = value 
+          callback = ()=> @load()
+          if ev = @options['on' + key.capitalize + 'Change'] then ev(callback) else callback()
         
     @headerView = new HeaderView({model: model, el: $('#header')}).render()
-
-  # Event handler for when url/key is received from user
-  updateSwaggerUi: (data) ->
-    extend @options, data
-    @load()
 
   # Create an api and render
   load: ->
