@@ -15,13 +15,12 @@ class Apidok
     output: ''
     version: null
     extendedModels: false
-    enableRoles: false
     simpleDatatypes: ['path', 'void', 'byte', 'boolean', 'int', 'long', 'float', 'double', 'string', 'Date']
 
   constructor: (config)->
     extend @config, config
     console.log "   : Generate documentation in #{@config.output}"
-    @loadBase().loadModels().loadApis().writeResources().writeApis()
+    @loadBase().loadModels().loadApis().prepareDirectories().writeResources().writeApis()
     console.log '   : Documentation generated!!'
 
   getContentDir: (baseprefix = '', aliasSeparator = '/', recursive = true, prefix = '')->
@@ -53,8 +52,10 @@ class Apidok
     return console.error '     - Missing require file: `config.coffee` does not exist in the doc path' unless raw['config']
 
     config = raw['config']
-    @roles = config.roles if @config.enableRoles
+    @roles = config.settings.role.list if config.settings.role
     @docConfig = extend {}, config
+
+    @config.version = config.apiCurrentVersion unless @config.version
 
     delete config.headers
     delete config.apiCurrentVersion
@@ -134,9 +135,16 @@ class Apidok
     console.log '     + Apis loaded'
     @
 
+  prepareDirectories: ->
+    for role in @roles
+      fs.mkdirSync(@config.output) if not fs.existsSync(@config.output)
+      fs.mkdirSync(@config.output + '/' + @config.version) if @config.version and not fs.existsSync(@config.output + '/' + @config.version)
+      fs.mkdirSync(@config.output + (@config.version and '/' + @config.version or '') + '/' + role) if role isnt 'all' and not fs.existsSync(@config.output + (@config.version and '/' + @config.version or '') + '/' + role)
+    @
+
   writeResources: ->
     for role in @roles
-      @resources[role].basePath = @docConfig.discoveryUrl
+      @resources[role].basePath = @docConfig.discoveryUrl + '/' + (@config.version and '/' + @config.version or '') + (role isnt 'all' and '/' + role or '')
       fs.writeFileSync(@config.output + (@config.version and '/' + @config.version or '') + (role isnt 'all' and '/' + role or '') + '/resources.json', JSON.stringify(@resources[role]))
     console.log '     + Resources writed'
     @

@@ -12,8 +12,7 @@ argv = require('optimist')
     o: 'Destination of the generated documentation'
     v: 'Enable the documentation versionning'
     'extended-models': 'Whether or not models can be extended: pet$default, pet$detailled, ...'
-    'enable-roles': 'Roles based documentation. (roles need to be defined in resources.coffee)'
-  .boolean(['extended-models', 'enable-roles'])
+  .boolean(['extended-models'])
   .default
     i: './example'
     o: './dist'
