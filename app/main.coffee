@@ -18,13 +18,11 @@ window.swaggerUi = new SwaggerUi
       console.log "Unable to Load SwaggerUI"
       console.log data
   docExpansion: "none"
+  settings: CONFIG.settings
 
 window.swaggerUi.$ = $
 
 $ ()->
-  # Custom settings
-  window.swaggerUi.options[name] = setting.default or _.last setting.list for name, setting of CONFIG.settings
-
   # BeforeLoad trigger
   CONFIG.beforeLoad?.call(window.swaggerUi, ()-> window.swaggerUi.load()) or  window.swaggerUi.load()
 

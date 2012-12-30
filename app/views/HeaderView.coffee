@@ -1,3 +1,16 @@
+# HELPER: #iterate
+# Iterate over an object.
+# 
+# {{#iterate obj}} Key: {{__key}} // Value: {{this}} {{/key_value}}
+# {{#iterate obj key="customKey"}} Key: {{customKey}} // Value: {{this}} {{/key_value}}
+Handlebars.registerHelper 'iterate', (obj, options)-> 
+  buffer = ''
+  for key, context of obj
+    context[options.hash.key or '__key'] = key
+    buffer += options.fn context
+  buffer
+
+
 class HeaderView extends Backbone.View
   events: 'change #api_selector select': 'changeSetting'
 

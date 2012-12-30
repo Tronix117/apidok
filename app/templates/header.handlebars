@@ -1,15 +1,15 @@
 <div class="swagger-ui-wrap">
   <a id="logo" href="https://github.com/Tronix117/apidok">Apidok</a>
   <form id='api_selector'>
-    {{#each this}}
+    {{#iterate this}}
       <div class='input'>
         <label>{{label}}: </label>
-        <select data-type="version">
+        <select data-type="{{__key}}">
           {{#each list}}
             <option value="{{this}}">{{this}}</option>
           {{/each}}
         </select>
       </div>
-    {{/each}}
+    {{/iterate}}
   </form>
 </div>

@@ -36,8 +36,8 @@ class SwaggerUi extends Backbone.Router
 
     # Create view to handle the header inputs
     attributes = {}
-    for name, setting in CONFIG.settings
-      attributes[name] = @options[name]
+    for name, setting of @options.settings
+      attributes[name] = @options.settings[name].default or _.last @options.settings[name].list
       attributes[name + 'List'] = setting.list
 
     model = new Backbone.Model attributes
@@ -45,9 +45,9 @@ class SwaggerUi extends Backbone.Router
       for key, change of changed.changes
         if change
           @options[key] = value
-          if ev = CONFIG.settings[key]['onChange'] then ev.call @, @load else @load()
-        
-    @headerView = new HeaderView({model: model, el: $('#header')}).render()
+          if ev = @options.settings[key]['onChange'] then ev.call @, @load else @load()
+
+    @headerView = new HeaderView(model: model, el: $ '#header').render()
 
   # Create an api and render
   load: ->

@@ -12,7 +12,7 @@ settings:
     list: ["0.1", "0.2"]
     onChange: (callback)-> 
       @options.headers['X-Api-Version'] = @options.version
-      @options.discoveryUrl: (CONFIG.basePath || './docs') + (CONFIG.resourcesFilename || '/resources.json')
+      @options.discoveryUrl = (CONFIG.basePath || './docs') + (CONFIG.resourcesFilename || '/resources.json')
       callback()
   role:
     label: 'Role'
@@ -21,14 +21,14 @@ settings:
     onChange: (callback)->
       callback() # placeholder because the code exemple bellow doesn't work with swagger api
 
-      @showMessage "Obtaining access for role #{@api.role}..."
+      @showMessage "Obtaining access for role #{@options.role}..."
       @$.post CONFIG.apiUrl + '/sessions/dummy', { role: @options.role }, (data)->
-        @options.discoveryUrl: "./docs/#{@options.version}/#{@options.role}/resources.json"
+        @options.discoveryUrl = "./docs/#{@options.version}/#{@options.role}/resources.json"
         @options.apiKey = data.access_token
         callback()
       , 'json'
 headers: 
   "X-App-Id": "com.apidok.doc"
   "Accept-Language": "en-US"
-beforeLoad: (callback)-> CONFIG.onVersionChange.call @, ()=> CONFIG.onRoleChange.call @, callback
+beforeLoad: (callback)-> CONFIG.settings.version.onChange.call @, ()=> CONFIG.settings.role.onChange.call @, callback
 afterLoad: ()->
