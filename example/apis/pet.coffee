@@ -26,5 +26,35 @@
         code:   404
         reason: "The user cannot be found"
     ]
+  ,
+    httpMethod:     "DELETE"
+    nickname:       "deletePet"
+    summary:        "Delete a pet"
+    notes:          "Only manager have access to this feature"
+    roles:          ['Administrator', 'Manager']
+    parameters:     [
+      paramType:       "path"
+      name:            "petId"
+      description:     "Pet id"
+      dataType:        "String"
+      required:        true
+    ]
+  ]
+,
+  path:        "/pet.{format}"
+  description: "Operations about pets"
+  operations:  [
+    httpMethod:     "POST"
+    nickname:       "addPet"
+    summary:        "Add a pet"
+    notes:          "Only manager have access to this feature"
+    roles:          ['Administrator', 'Manager']
+    parameters:     [
+      paramType:       "body"
+      name:            "pet"
+      description:     "Pet object"
+      dataType:        "int"
+      required:        true
+    ]
   ]
 ]

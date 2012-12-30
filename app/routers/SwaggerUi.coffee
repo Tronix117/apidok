@@ -53,6 +53,7 @@ class SwaggerUi extends Backbone.Router
   load: ->
     # Initialize the API object
     @mainView?.clear()
+    console.log @options
     @api = new SwaggerApi(@options)
 
   # This is bound to success handler for SwaggerApi

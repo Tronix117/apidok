@@ -9,8 +9,6 @@ window.swaggerUi = new SwaggerUi
   onComplete: (swaggerApi, swaggerUi)->
     if console
       console.log "Loaded SwaggerUI"
-      console.log swaggerApi
-      console.log swaggerUi
     $('pre code').each (i, e)-> hljs.highlightBlock(e)
     CONFIG.afterLoad?.call @
   onFailure: (data)->

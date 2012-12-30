@@ -4,4 +4,8 @@
 ,
   path: "/user.{format}"
   description: "Operations about user"
+,
+  path: "/admin.{format}"
+  description: "Admin operations"
+  roles: ['Administrator']
 ]

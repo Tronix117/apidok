@@ -100,7 +100,7 @@ class Apidok
     possibleModels = []
     for api in apis
       for operation in api.operations
-        possibleModels.push operation.responseClass.replace(/^.*\[(.*)\]$/,'$1') unless -1 < @config.simpleDatatypes.indexOf operation.responseClass
+        possibleModels.push operation.responseClass.replace(/^.*\[(.*)\]$/,'$1') unless not operation.responseClass or -1 < @config.simpleDatatypes.indexOf operation.responseClass
         if operation.parameters
           for parameter in operation.parameters
             possibleModels.push parameter.dataType.replace(/^.*\[(.*)\]$/,'$1') unless -1 < @config.simpleDatatypes.indexOf parameter.dataType
