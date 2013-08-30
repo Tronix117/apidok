@@ -53,7 +53,7 @@
       paramType:       "body"
       name:            "pet"
       description:     "Pet object"
-      dataType:        "int"
+      dataType:        "Pet"
       required:        true
     ]
   ]

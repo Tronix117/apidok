@@ -79,7 +79,7 @@ class Apidok
     for id, model of raw
       @models[id] = 
         id: id.replace /\$.*$/, ''
-        properties: model    
+        properties: @_decodeSimpleModel model
       @models[id.replace /\$.*$/, ''] = @models[id] if id.match /\$default$/
 
     if @config.extendedModels
@@ -87,6 +87,10 @@ class Apidok
 
     console.log '     + Models loaded'
     @
+
+  _decodeSimpleModel: (model)-> 
+    #model[key] = type: value if typeof value == "String" for key, value in model
+    model
 
   modelsForModel: (model)->
     models = [model]
